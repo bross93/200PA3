@@ -1,17 +1,21 @@
+import java.util.Collections;
+
 
 public class Account implements Comparable<Account> {
 public String type;
 public String name;
-public static String city;
+public String city;
+public int size;
 public double balance;
 public double intRate;
 public boolean loan = false;
+Bank bank = new Bank();
 
 
 
 @Override
 public String toString() {
-	
+	Collections.sort(bank.accounts,bank.comparator);
 	return String.format("\t %18s:    %20s   %15s  %10.2f\n",type,name,city,balance);
 	
 }
@@ -31,6 +35,16 @@ public Account(String t, String n, String c, double d){
 public int compareTo(Account blah) {
 	// TODO Auto-generated method stub
 	return name.compareTo(blah.name);
+}
+
+public int size() {
+	// TODO Auto-generated method stub
+	return size;
+}
+
+public void addSize() {
+	// TODO Auto-generated method stub
+	size++;
 }
 
 }

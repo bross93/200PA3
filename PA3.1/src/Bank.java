@@ -1,10 +1,11 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 
 public class Bank {
 	public int _size;
-	
+	Comparator<Account> comparator;
 	ArrayList<Account> accounts = new ArrayList<Account>();
 	
 	void add(Account account){
@@ -16,40 +17,39 @@ public class Bank {
 		return _size;
 	}
 	
-	Account find(String account){
-		for (int i = 0; i< _size; i++){
-		       Account current = accounts.get(i);
-		            if (current.name.contains(account)){
-		             return current;
-		             
-		}else{
-			return null;
-		}
-		}
-		return null;
+	public ArrayList<Account> find(String value, ArrayList <Account> account) {
+		ArrayList<Account> foundAccounts = new ArrayList<Account>();
+	    for (int i = 0; i <account.size();i++) {
+	        if (account.get(i).name.equals(value)) {
+	           foundAccounts.add(account.get(i));
+	           return foundAccounts;
+	        }
+	        return null;
+	    }
+
+	    return null;
 	}
 	
 	void addToBalance(String string, double amount){
-		Account toAdd = find("string");
-			toAdd.balance += amount;
+		
 	}
 	
 	//Name, city, and balance assign the comparater memeber variable to be an instance of an appropriate class that implements Comparator<Account>
 	void sortByName(){
-		//Sets sorting method to by name, sets comparator
-		Collections.sort(accounts);
+		comparator = new CompareByName();
 	}
 	
 	void sortByCity(){
-		
+		comparator = new CompareByCity();
 	}
 	
 	void sortByBalance(){
 		//Sets comparater to balance, I would hate to be at the bottom of this list :0
+		comparator = new CompareByBalance();
 	}
 	
 	void sortByType(boolean type){
-		//Sets comparater to comparaterbytype
+		comparator = new CompareByType();
 	}
 	
 	

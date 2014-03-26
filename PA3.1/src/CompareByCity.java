@@ -1,7 +1,10 @@
+import java.util.Comparator;
 
-public class CompareByCity {
-	public int compareTo(Account blah) {
+
+public class CompareByCity  implements Comparator<Account>{
+	@Override
+	public int compare(Account blah, Account blah2) {
 		// TODO Auto-generated method stub
-		return Account.city.compareTo(blah.city);
-	}
+		return blah.city.compareTo(blah2.city);
+	}	
 }

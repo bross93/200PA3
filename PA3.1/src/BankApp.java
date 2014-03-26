@@ -27,8 +27,9 @@ Collections.sort(accounts,comparator) if a sort method had been specified.
 	 */
 	
 	
-	public static void main(String args[]){
+	public static void main(String args[]) throws AccountNotFoundException{
 		ArrayList<Account> accounts = new ArrayList<Account>();
+		
 		String newChecking = "new checking";
 		String name,city,businessType,type;
 		double balance, interest;
@@ -42,28 +43,32 @@ Collections.sort(accounts,comparator) if a sort method had been specified.
 			System.out.print("Enter command: ");
 			String command = keyboard.nextLine();
 			
-			if(command.equalsIgnoreCase(newChecking)){
-				type = "checking";
-				System.out.println(" Enter the name: ");
+			
+			if(command.equalsIgnoreCase("new checking")){
+				type = "Checking Account";
+				System.out.print(" Enter the name: ");
 				name = keyboard.nextLine();
-				System.out.println(" Enter the city: ");
+				System.out.print(" Enter the city: ");
 				city = keyboard.nextLine();
-				System.out.println(" Enter the initial balance: ");
+				System.out.print(" Enter the initial balance: ");
 				balance = keyboard.nextDouble();
+				keyboard.nextLine();
 				Account check = new CheckingAccount(type,name,city,balance);
 				accounts.add(check);
+				
 				
 				//System.out.println(accounts);
 			}
 			
 			else if(command.equalsIgnoreCase("new savings")){
-				type = "savings";
-				System.out.println(" Enter the name: ");
+				type = "Savings Account";
+				System.out.print(" Enter the name: ");
 				name = keyboard.nextLine();
-				System.out.println(" Enter the city: ");
+				System.out.print(" Enter the city: ");
 				city = keyboard.nextLine();
-				System.out.println(" Enter the initial balance: ");
+				System.out.print(" Enter the initial balance: ");
 				balance = keyboard.nextDouble();
+				keyboard.nextLine();
 				Account check = new SavingsAccount(type,name,city,balance);
 				accounts.add(check);
 				
@@ -71,7 +76,7 @@ Collections.sort(accounts,comparator) if a sort method had been specified.
 			
 			else if(command.equalsIgnoreCase("new retail")){
 				String typee;
-				type = "retail";
+				type = "Retail Account";
 				System.out.print(" Enter the name: ");
 				name = keyboard.nextLine();
 				System.out.print(" Enter the city: ");
@@ -80,14 +85,16 @@ Collections.sort(accounts,comparator) if a sort method had been specified.
 				balance = keyboard.nextDouble();
 				System.out.print(" Enter the business type: ");
 				typee = keyboard.next();
+				keyboard.nextLine();
 				Account check = new RetailAccount(type,name,city, typee, balance);
 				accounts.add(check);
+				//Exceptions, help command, wtf
 				
 			}
 			
 			else if(command.equalsIgnoreCase("new realestate")){
 				String typee;
-				type = "realestate";
+				type = "Realestate Account";
 				System.out.print(" Enter the name: ");
 				name = keyboard.nextLine();
 				System.out.print(" Enter the city: ");
@@ -96,6 +103,7 @@ Collections.sort(accounts,comparator) if a sort method had been specified.
 				balance = keyboard.nextDouble();
 				System.out.print(" Enter the business type: ");
 				typee = keyboard.next();
+				keyboard.nextLine();
 				Account check = new RealestateAccount(type,name,city, typee, balance);
 				accounts.add(check);
 				
@@ -103,7 +111,7 @@ Collections.sort(accounts,comparator) if a sort method had been specified.
 			
 			else if(command.equalsIgnoreCase("new loan")){
 				String typee;
-				type = "realestate";
+				type = "Loan Account";
 				System.out.print(" Enter the name: ");
 				name = keyboard.nextLine();
 				System.out.print(" Enter the city: ");
@@ -112,6 +120,7 @@ Collections.sort(accounts,comparator) if a sort method had been specified.
 				balance = keyboard.nextDouble();
 				System.out.print(" Enter the interest rate: ");
 				interest = keyboard.nextDouble();
+				keyboard.nextLine();
 				Account check = new LoanAccount(type,name,city, balance,interest);
 				accounts.add(check);
 				
@@ -128,31 +137,99 @@ Collections.sort(accounts,comparator) if a sort method had been specified.
 			
 			else if(command.equalsIgnoreCase("sort name")){
 				
-				Collections.sort(accounts);
+				Collections.sort(accounts,new CompareByName());
 				
 				
 			}
 			
 			else if(command.equalsIgnoreCase("sort city")){
 				
-				//Collections.sort(accounts,new CompareByCity());
+				Collections.sort(accounts,new CompareByCity());
 				
 				
 			}
 			
-			else if(command.equalsIgnoreCase("show")){
-			
+				else if(command.equalsIgnoreCase("sort balance")){
 				
-				System.out.println(accounts);
+				Collections.sort(accounts,new CompareByBalance());
+				
+				
+			}
+			
+				else if(command.equalsIgnoreCase("sort type")){
+					
+					Collections.sort(accounts,new CompareByType());
+					
+					
+				}
+			
+			else if(command.equalsIgnoreCase("show")){				
+				System.out.println("Bank:");
+				String asString = accounts.toString().replaceAll("^\\[", "").replaceAll("\\]$", "").replace(",", "");
+				System.out.println(asString);
+				//System.out.println(accounts.toString().substring(1,accounts.toString().length()-1));
+			}
+			
+			else if(command.equalsIgnoreCase("find")){				
+				Bank bank = new Bank();
+				System.out.print("Enter the name: ");
+				String searchName = keyboard.nextLine();
+				ArrayList<Account> foundAccounts = new ArrayList<Account>();
+				try {					
+					foundAccounts = bank.find(searchName, accounts);
+					if(bank.find(searchName, accounts)==null){
+						throw new AccountNotFoundException("Could not find: " + searchName);
+					}
+					String asString = accounts.toString().replaceAll("^\\[", "").replaceAll("\\]$", "").replace(",", "");
+					System.out.println(asString);
+				} catch (AccountNotFoundException e) {
+					//System.out.println(e);
+					
+					
+				}
+				
 			}
 			
 			else if(command.equalsIgnoreCase("quit")){				
 				exit = true;
 				System.exit(0);
 			}
+			else if(command.equalsIgnoreCase("add")){	
+				ArrayList<Account> foundAccounts = new ArrayList<Account>();
+				Bank bank = new Bank();
+				System.out.print("Enter the name: ");
+				String searchName = keyboard.nextLine();
+				System.out.print("Enter the additional amount: ");
+				double added = keyboard.nextDouble();
+				try {					
+					foundAccounts = bank.find(searchName, accounts);
+					if(bank.find(searchName, accounts)==null){
+						throw new AccountNotFoundException("Could not find: " + searchName);
+					}
+					//accounts.remove(foundAccounts.get(0).balance+=added);
+					foundAccounts.get(0).balance+=added;
+					accounts.add(foundAccounts.get(0));
+					accounts.remove(foundAccounts.get(0));
+				} catch (AccountNotFoundException e) {
+					//System.out.println(e);
+					
+					
+			}
+			
+			
+			
+			
+			
+	}else{
+		
+		System.out.println(" Valid commands are");
+		System.out.print("  new checking\n  new savings\n  new loan\n  new retail\n  new realestate\n  fnd\n  add\n  sort name\n  sort city\n  sort balance\n  sort type\n  sort notype\n  show\n  quit");
+		
+		
 	}
 		
 	}
 	
 	
+}
 }
